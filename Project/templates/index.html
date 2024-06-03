@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@0,400;1,700" rel="stylesheet">
+    <title>Usuários no AD</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./static/style.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <section class="area-pesquisa">
+    <div class="result">
+      <a href="/">
+        <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo" class="img-fluid">
+      </a>
+      
+
+        <!-- Formulário de Login -->
+        {% if not session.username %}
+          <form action="/login" method="POST" class="search-box1">
+            <div class="mb-3">
+              <label for="username" class="form-label">Usuário:</label>
+              <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Senha:</label>
+              <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn1 btn-primary">Login</button>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                
+            {% endif %}
+        {% endwith %}
+          </form>
+        <div>
+        {% endif %}
+
+        <!-- Seção de pesquisa que será exibida após o login -->
+        {% if session.username %}
+        <div class="pesquisa mt-3">
+          <form action="/search" method="GET" class="search-form">
+            <div class="search-box js-search-box">
+              <div class="search-input">
+                <input type="text" class="js-input-search" id="search" name="query" placeholder="Pesquisa usuário">
+              </div>
+              <button class="search js-btn-search" type="submit">
+                <ion-icon name="search-outline"></ion-icon>
+              </button>
+              <button class="close js-close" type="button">
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="botao-criar mt-3">
+          <div class="chama_pagina">
+            <a href="/users" class="btn btn-success">Criar Usuário</a>
+          </div>
+          <div class="botao-criar">
+            <a href="/logout" class="btn btn-danger">Sair</a>
+          </div>
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+              <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+  </section>
+  <script>
+    const searchBox = document.querySelector('.js-search-box');
+    const searchBtn = document.querySelector('.js-btn-search');
+    const btnClose = document.querySelector('.js-close');
+    const input = document.querySelector('.js-input-search');
+    const form = document.querySelector('.search-form');
+
+    searchBtn.addEventListener('click', (event) => {
+      if (input.value.trim() === '') {
+        event.preventDefault();
+        searchBox.classList.add('active');
+      } else {
+        form.submit();
+      }
+    });
+
+    btnClose.addEventListener('click', () => {
+      searchBox.classList.remove('active');
+      input.value = '';
+    });
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        if (input.value.trim() !== '') {
+          form.submit();
+        } else {
+          event.preventDefault();
+          searchBox.classList.add('active');
+        }
+      }
+    });
+  </script>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</div>
+      
+  </body>
+</html>

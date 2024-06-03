@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@0,400;1,700" rel="stylesheet">
+    <title>Criar Usuários</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/users.css">
+</head>
+<body>
+  <section class="area-result">
+    <div class="result">
+      <a href="/">
+        <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
+    </a>
+      <h1>Novo usuário {{data}}</h1>
+      <form action="/create_user" method="POST" class="search-box">
+        <div class="input-group">
+        <input type="text" name="primeiro_nome" placeholder="Primeiro Nome" required>
+        </div>
+        <div class="input-group">
+        <input type="text" name="sobrenome" placeholder="Sobrenome" required>
+        </div>
+        <div class="input-group">
+        <input type="text" name="dateofbrith" placeholder="Data de Nascimento" required>
+        </div>
+        <div class="input-group">
+        <input type="text" id="logon" name="logon" placeholder="Nome de logon" required>
+        </div>
+        <div class="input-group">
+        <input type="password" name="password" placeholder="Senha" required>
+        </div>
+        <div class="input-group">
+        <input type="text" name="description" placeholder="Descrição" required>
+        </div>
+        <div class="input-group">
+        <input type="text" name="title" placeholder="Cargo" required>
+        </div>
+        <div class="input-group">
+        <input type="text" name="department" placeholder="Departamento" required>
+        </div>
+        <div class="input-group">
+        <select name="regional" id="regional" required>
+          <option value="">Selecione a Regional</option>
+          <option value="UR_BHE">Belo Horizonte</option>
+          <option value="UR_BSA">Brasília</option>
+          <option value="UR_CGR">Campo Grande</option>
+          <option value="UR_CPS">Campinas</option>
+          <option value="UR_CTA">Curitiba</option>
+          <option value="UR_FOR">Fortaleza</option>
+          <option value="UR_GNA">Goiânia</option>
+          <option value="UR_JOI">Joinville</option>
+          <option value="UR_POA">Porto Alegre</option>
+          <option value="UR_RAO">Ribeirão Preto</option>
+          <option value="UR_RCE">Recife</option>
+          <option value="UR_RJ">Rio de Janeiro</option>
+          <option value="UR_SPO">São Paulo</option>
+          <option value="UR_SV">Salvador</option>
+          <option value="UR_UDI">Uberlândia</option>
+          <option value="UR_VIT">Vitória</option>
+        </div>
+          <!-- Adicione mais OUs conforme necessário -->
+        </select>
+        
+        <!-- Hidden fields for additional attributes -->
+        <input type="hidden" id="physicalDeliveryOfficeName" name="physicalDeliveryOfficeName">
+        <input type="hidden" id="st" name="st">
+        <input type="hidden" id="company" name="company">
+        <input type="hidden" id="logon_sAMAccountName" name="logon_sAMAccountName" placeholder="Usuário Desktop" readonly>
+        <input type="hidden" id="logon_email" name="logon_email" placeholder="Email" readonly>
+        <div class="input-group">
+        <button type="submit">Criar Usuário</button>
+        </div>
+      </form>
+    </div>
+    <div class="flash-messages">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('logon').addEventListener('input', function() {
+      var logonName = this.value;
+      var emailDomain = '@amchambrasil.com.br';
+      document.getElementById('logon_sAMAccountName').value = logonName;
+      document.getElementById('logon_email').value = logonName + emailDomain;
+    });
+
+    document.getElementById('regional').addEventListener('change', function() {
+      var selectedValue = this.value;
+      switch(selectedValue) {
+        case 'UR_BHE':
+          document.getElementById('physicalDeliveryOfficeName').value = 'BELO HORIZONTE';
+          document.getElementById('st').value = 'Minas Gerais';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_BSA':
+          document.getElementById('physicalDeliveryOfficeName').value = 'BRASÍLIA';
+          document.getElementById('st').value = 'BRASÍLIA';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_CGR':
+          document.getElementById('physicalDeliveryOfficeName').value = 'CAMPO GRANDE';
+          document.getElementById('st').value = 'Mato Grosso do Sul';
+          document.getElementById('company').value = 'AMCHAM';
+        case 'UR_CPS':
+          document.getElementById('physicalDeliveryOfficeName').value = 'CAMPINAS';
+          document.getElementById('st').value = 'São Paulo';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_CTA':
+          document.getElementById('physicalDeliveryOfficeName').value = 'CURITIBA';
+          document.getElementById('st').value = 'Paraná';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_FOR':
+          document.getElementById('physicalDeliveryOfficeName').value = 'FORTALEZA';
+          document.getElementById('st').value = 'Ceará';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_GNA':
+          document.getElementById('physicalDeliveryOfficeName').value = 'GOIÂNIA';
+          document.getElementById('st').value = 'Goiás';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_JOI':
+          document.getElementById('physicalDeliveryOfficeName').value = 'JOINVILLE';
+          document.getElementById('st').value = 'Santa Catarina';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_POA':
+          document.getElementById('physicalDeliveryOfficeName').value = 'PORTO ALEGRE';
+          document.getElementById('st').value = 'Rio Grande do Sul';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_RAO':
+          document.getElementById('physicalDeliveryOfficeName').value = 'RIBEIRÃO PRETO';
+          document.getElementById('st').value = 'São Paulo';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_RCE':
+          document.getElementById('physicalDeliveryOfficeName').value = 'RECIFE';
+          document.getElementById('st').value = 'Pernambuco';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_RJ':
+          document.getElementById('physicalDeliveryOfficeName').value = 'RIO DE JANEIRO';
+          document.getElementById('st').value = 'Rio de Janeiro';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_SPO':
+          document.getElementById('physicalDeliveryOfficeName').value = 'SÃO PAULO';
+          document.getElementById('st').value = 'São Paulo';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_SV':
+          document.getElementById('physicalDeliveryOfficeName').value = 'SALVADOR';
+          document.getElementById('st').value = 'Bahia';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_UDI':
+          document.getElementById('physicalDeliveryOfficeName').value = 'UBERLÂNDIA';
+          document.getElementById('st').value = 'Minas Gerais';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        case 'UR_VIT':
+          document.getElementById('physicalDeliveryOfficeName').value = 'VITÓRIA';
+          document.getElementById('st').value = 'Espirito Santo';
+          document.getElementById('company').value = 'AMCHAM';
+          break;
+        default:
+          document.getElementById('physicalDeliveryOfficeName').value = '';
+          document.getElementById('st').value = '';
+          document.getElementById('company').value = '';
+          break;
+          }
+        });
+
+  </script>
+          
+</body>
+</html> 

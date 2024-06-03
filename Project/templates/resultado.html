@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Resultado da Pesquisa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='result.css') }}">
+</head>
+<body>
+    <section class="area-result">
+        <div class="result">
+            <div>
+                <a href="/">
+                    <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
+                </a>
+            </div>
+            <p><br>A senha do usuário <strong style="text-transform: uppercase;">{{ username }}</strong><br><br> expira em {{ expiracao }}</p><br>
+            
+            {% if bloqueado %}
+                <p>O usuário está bloqueado.</p>
+                <form action="/unlock-user" method="POST">
+                    <input type="hidden" name="username" value="{{ username }}">
+                    <button type="submit">Desbloquear Usuário</button>
+                </form>
+            {% else %}
+                <p>O usuário não está bloqueado.</p>
+            {% endif %}
+            
+            <form action="/change-password" method="POST" class="search-box">
+                <input type="hidden" name="username" value="{{ username }}">
+                <div class="input-group">
+                    <label for="new_password">Nova Senha:</label>
+                    <div class="password-input">
+                        <input type="password" id="new_password" name="new_password" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="confirm_password">Confirmar Nova Senha:</label>
+                    <div class="password-input">
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                </div>
+                <button type="submit">Trocar Senha</button>
+            </form>
+    
+            <p>Não expirou a senha?</p>
+            <form action="/" method="get">
+                <button type="submit" class="voltar">Voltar</button>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
