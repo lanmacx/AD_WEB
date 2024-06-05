@@ -238,6 +238,7 @@ button.search {
     background-color: #0056b3;
 }
 
+
 .result {
     display: flex;
     flex-direction: column;
@@ -266,4 +267,17 @@ button.search {
 
 .btn1:hover {
     background-color: #0056b3;
+}
+
+.btn2 {
+    display: inline-block;
+    width: 99%;
+    padding: 9px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
 }

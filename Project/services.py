@@ -25,7 +25,7 @@ def verificar_login(username, password):
         print(f"Erro de autenticação: {str(e)}")
         return False
 
-def verificar_grupo(username, grupo):
+def verificar_grupo(username, grupo_ti, grupo_rh):
     try:
         server = Server(LDAP_SERVER, port=PORT_SSL, use_ssl=True, get_info=ALL)
         conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad, authentication=SIMPLE)
@@ -41,19 +41,22 @@ def verificar_grupo(username, grupo):
             user_entry = conn.entries[0]
             member_of = user_entry['memberOf'].values
 
-            grupo_dn = f"CN={grupo},OU=Security,OU=Groups,OU=UR_SPO,{base_dn}"
-            if grupo_dn in member_of:
-                print(f"Usuário {username} pertence ao grupo {grupo}.")
-                return True
-            else:
-                print(f"Usuário {username} não pertence ao grupo {grupo}.")
-                return False
+            grupoRH = f"CN={grupo_rh},OU=Departamentos,OU=Security,OU=Groups,OU=UR_SPO,{base_dn}"
+            grupoTI = f"CN={grupo_ti},OU=Security,OU=Groups,OU=UR_SPO,{base_dn}"
+
+
+            if grupoTI in member_of:
+                print(f"Usuário {username} pertence ao grupo {grupoTI}.")
+                return "TI"
+            if grupoRH in member_of:
+                print(f"Usuário {username} pertence ao grupo {grupoRH}.")
+                return "RH"
         else:
             print(f"Usuário {username} não encontrado no AD.")
-            return False
+            return ""
     except Exception as e:
         print(f"Erro ao verificar grupo: {str(e)}")
-        return False
+        return ""
 
 def login_required(f):
     @wraps(f)
@@ -182,3 +185,32 @@ def desbloquear_usuario(nome_usuario):
     except Exception as e:
         return str(e), False
  
+def user_details(username):
+    try:
+        # Configurações do servidor Active Directory
+        servidor_ad = os.getenv('SERVIDOR_AD')
+        porta_ad = int(os.getenv('PORTA_AD'))
+        usuario_ad = os.getenv('USUARIO_AD')
+        senha_ad = os.getenv('SENHA_AD')
+        dominio_ad = os.getenv('DOMINIO_AD')
+        base_dn = os.getenv('BASE_DN')
+
+        # Conectando ao Active Directory
+        server = Server(servidor_ad, port=porta_ad, get_info=ALL)
+        conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad,
+                          auto_bind=AUTO_BIND_TLS_BEFORE_BIND, authentication=SIMPLE)
+        search_filter = f'(sAMAccountName={username})'
+        conn.search(base_dn, search_filter, attributes=['cn', 'dateOfBirth', 'extensionAttribute1', 'extensionAttribute2'])
+
+        if conn.entries:
+            user = conn.entries[0]
+            print(f"CN: {user.cn}")
+            print(f"Date of Birth: {user.dateOfBirth}")
+            print(f"Extension Attribute 1: {user.extensionAttribute1}")
+            print(f"Extension Attribute 2: {user.extensionAttribute2}")
+            return user
+        else:
+            print("Usuário não encontrado.")
+            return None
+    except Exception as e:
+        return str(e), False

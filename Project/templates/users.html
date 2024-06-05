@@ -7,6 +7,12 @@
     <title>Criar Usuários</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./static/style.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
     <link rel="stylesheet" href="./static/users.css">
 </head>
 <body>
@@ -14,77 +20,105 @@
     <div class="result">
       <a href="/">
         <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
-    </a>
-      <h1>Novo usuário {{data}}</h1>
-      <form action="/create_user" method="POST" class="search-box">
-        <div class="input-group">
-        <input type="text" name="primeiro_nome" placeholder="Primeiro Nome" required>
+      </a>
+      <!-- Formulário de Login -->
+      {% if not session.username %}
+        <form action="/login" method="POST" class="search-box1">
+          <div class="mb-3">
+            <label for="username" class="form-label">Usuário:</label>
+            <input type="text" id="username" name="username" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Senha:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn1 btn-primary">Login</button>
+        </form>
+        <div>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <ul class="messages">
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
         </div>
-        <div class="input-group">
-        <input type="text" name="sobrenome" placeholder="Sobrenome" required>
-        </div>
-        <div class="input-group">
-        <input type="text" name="dateofbrith" placeholder="Data de Nascimento" required>
-        </div>
-        <div class="input-group">
-        <input type="text" id="logon" name="logon" placeholder="Nome de logon" required>
-        </div>
-        <div class="input-group">
-        <input type="password" name="password" placeholder="Senha" required>
-        </div>
-        <div class="input-group">
-        <input type="text" name="description" placeholder="Descrição" required>
-        </div>
-        <div class="input-group">
-        <input type="text" name="title" placeholder="Cargo" required>
-        </div>
-        <div class="input-group">
-        <input type="text" name="department" placeholder="Departamento" required>
-        </div>
-        <div class="input-group">
-        <select name="regional" id="regional" required>
-          <option value="">Selecione a Regional</option>
-          <option value="UR_BHE">Belo Horizonte</option>
-          <option value="UR_BSA">Brasília</option>
-          <option value="UR_CGR">Campo Grande</option>
-          <option value="UR_CPS">Campinas</option>
-          <option value="UR_CTA">Curitiba</option>
-          <option value="UR_FOR">Fortaleza</option>
-          <option value="UR_GNA">Goiânia</option>
-          <option value="UR_JOI">Joinville</option>
-          <option value="UR_POA">Porto Alegre</option>
-          <option value="UR_RAO">Ribeirão Preto</option>
-          <option value="UR_RCE">Recife</option>
-          <option value="UR_RJ">Rio de Janeiro</option>
-          <option value="UR_SPO">São Paulo</option>
-          <option value="UR_SV">Salvador</option>
-          <option value="UR_UDI">Uberlândia</option>
-          <option value="UR_VIT">Vitória</option>
-        </div>
+      {% endif %}
+
+      <!-- Seção de pesquisa que será exibida após o login -->
+      {% if session.username %}
+        <h1>Novo usuário {{data}}</h1>
+        <form action="/create_user" method="POST" class="search-box1">
+          <div class="input-group">
+            <input type="text" name="primeiro_nome" placeholder="Primeiro Nome" required>
+          </div>
+          <div class="input-group">
+            <input type="text" name="sobrenome" placeholder="Sobrenome" required>
+          </div>
+          <div class="input-group">
+            <input type="text" name="dateofbrith" placeholder="Data de Nascimento" required>
+          </div>
+          <div class="input-group">
+            <input type="text" id="logon" name="logon" placeholder="Nome de logon" required>
+          </div>
+          <div class="input-group">
+            <input type="password" name="password" placeholder="Senha" required>
+          </div>
+          <div class="input-group">
+            <input type="text" name="description" placeholder="Descrição" required>
+          </div>
+          <div class="input-group">
+            <input type="text" name="title" placeholder="Cargo" required>
+          </div>
+          <div class="input-group">
+            <input type="text" name="department" placeholder="Departamento" required>
+          </div>
+          <div class="input-group">
+            <select name="regional" id="regional" required>
+              <option value="">Selecione a Regional</option>
+              <option value="UR_BHE">Belo Horizonte</option>
+              <option value="UR_BSA">Brasília</option>
+              <option value="UR_CGR">Campo Grande</option>
+              <option value="UR_CPS">Campinas</option>
+              <option value="UR_CTA">Curitiba</option>
+              <option value="UR_FOR">Fortaleza</option>
+              <option value="UR_GNA">Goiânia</option>
+              <option value="UR_JOI">Joinville</option>
+              <option value="UR_POA">Porto Alegre</option>
+              <option value="UR_RAO">Ribeirão Preto</option>
+              <option value="UR_RCE">Recife</option>
+              <option value="UR_RJ">Rio de Janeiro</option>
+              <option value="UR_SPO">São Paulo</option>
+              <option value="UR_SV">Salvador</option>
+              <option value="UR_UDI">Uberlândia</option>
+              <option value="UR_VIT">Vitória</option>
+            </select>
+          </div>
           <!-- Adicione mais OUs conforme necessário -->
-        </select>
-        
-        <!-- Hidden fields for additional attributes -->
-        <input type="hidden" id="physicalDeliveryOfficeName" name="physicalDeliveryOfficeName">
-        <input type="hidden" id="st" name="st">
-        <input type="hidden" id="company" name="company">
-        <input type="hidden" id="logon_sAMAccountName" name="logon_sAMAccountName" placeholder="Usuário Desktop" readonly>
-        <input type="hidden" id="logon_email" name="logon_email" placeholder="Email" readonly>
-        <div class="input-group">
-        <button type="submit">Criar Usuário</button>
+          <!-- Hidden fields for additional attributes -->
+          <input type="hidden" id="physicalDeliveryOfficeName" name="physicalDeliveryOfficeName">
+          <input type="hidden" id="st" name="st">
+          <input type="hidden" id="company" name="company">
+          <input type="hidden" id="logon_sAMAccountName" name="logon_sAMAccountName" placeholder="Usuário Desktop" readonly>
+          <input type="hidden" id="logon_email" name="logon_email" placeholder="Email" readonly>
+          <div class="input-group">
+            <button type="submit">Criar Usuário</button>
+          </div>
+        </form>
+        <div class="flash-messages">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <ul class="messages">
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endwith %}
         </div>
-      </form>
-    </div>
-    <div class="flash-messages">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class="messages">
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
+      {% endif %}
     </div>
   </section>
 
@@ -113,6 +147,7 @@
           document.getElementById('physicalDeliveryOfficeName').value = 'CAMPO GRANDE';
           document.getElementById('st').value = 'Mato Grosso do Sul';
           document.getElementById('company').value = 'AMCHAM';
+          break;
         case 'UR_CPS':
           document.getElementById('physicalDeliveryOfficeName').value = 'CAMPINAS';
           document.getElementById('st').value = 'São Paulo';
@@ -183,10 +218,8 @@
           document.getElementById('st').value = '';
           document.getElementById('company').value = '';
           break;
-          }
-        });
-
+      }
+    });
   </script>
-          
 </body>
-</html> 
+</html>

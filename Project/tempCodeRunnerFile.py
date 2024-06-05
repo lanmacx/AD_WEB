@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, flash, session, get_flashed_messages
+from flask import Flask, request, render_template, redirect, url_for, flash, session
 from functools import wraps
 import os
 from dotenv import load_dotenv
@@ -100,36 +100,23 @@ def search():
         return redirect(url_for('index'))
     
 @app.route('/user.details', methods=['GET'])
-def search_user():
-    query = request.args.get('query')
-    if not query:
-        flash("Por favor, forneça um nome de usuário para pesquisa.", 'error')
-        return redirect(url_for('search_user'))
-        
-    # Conectar ao servidor AD
-    server = Server(LDAP_SERVER, port=PORT_SSL, use_ssl=True, get_info=ALL)
-    conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad, auto_bind=True)
+def search_user(username):
     
-    search_filter = f'(sAMAccountName={query})'
-    conn.search(base_dn, search_filter, attributes=['cn', 'extensionAttribute1', 'extensionAttribute2', 'department', 'physicalDeliveryOfficeName', 
-                                                    'title', 'telephoneNumber'])
-
+    query = request.args.get('query')
+    if query:
+        
+        
     if conn.entries:
         user = conn.entries[0]
-        user_info = {
-            "cn": str(user.cn),
-            "extensionAttribute1": str(user.extensionAttribute1),
-            "extensionAttribute2": str(user.extensionAttribute2),
-            "department": str(user.department),
-            "physicalDeliveryOfficeName": str(user.physicalDeliveryOfficeName), 
-            "title": str(user.title),
-            "telephoneNumber": str(user.telephoneNumber), 
-            }
-        return render_template('update.html', user=user_info)
+        print(f"CN: {user.cn}")
+        print(f"Date of Birth: {user.dateOfBirth}")
+        print(f"Extension Attribute 1: {user.extensionAttribute1}")
+        print(f"Extension Attribute 2: {user.extensionAttribute2}")
+        return user
     else:
-        flash("Usuário não encontrado no Active Directory.", 'error')
-        return render_template('rh.html', user=None)
-    
+        print("Usuário não encontrado.")
+        return None 
+
 @app.route('/change-password', methods=['POST'])
 def change_password():
     username = request.form.get('username')
@@ -148,39 +135,6 @@ def change_password():
 
     return redirect(url_for('index'))
 
-@app.route('/user.update', methods=['POST'])
-def update_user():
-    cn = request.form.get('cn')
-    extensionAttribute1 = request.form.get('extensionAttribute1')
-    extensionAttribute2 = request.form.get('extensionAttribute2')
-    department = request.form.get('department')
-    physicalDeliveryOfficeName = request.form.get('physicalDeliveryOfficeName')
-    title = request.form.get('title')
-    telephoneNumber = request.form.get('telephoneNumber')
-
-    # Conectar ao servidor AD
-    server = Server(LDAP_SERVER, port=PORT_SSL, use_ssl=True, get_info=ALL)
-    conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad, auto_bind=True)
-    
-    search_filter = f'(cn={cn})'
-    conn.search(base_dn, search_filter, attributes=['cn'])
-
-    if conn.entries:
-        user_dn = conn.entries[0].entry_dn
-        conn.modify(user_dn, {
-            'extensionAttribute1': [(MODIFY_REPLACE, [extensionAttribute1])],
-            'extensionAttribute2': [(MODIFY_REPLACE, [extensionAttribute2])],
-            'department': [(MODIFY_REPLACE, [department])],
-            'physicalDeliveryOfficeName': [(MODIFY_REPLACE, [physicalDeliveryOfficeName])],
-            'title': [(MODIFY_REPLACE, [title])],
-            'telephoneNumber': [(MODIFY_REPLACE, [telephoneNumber])],
-        })
-        flash("Detalhes do usuário atualizados com sucesso.", 'success')
-    else:
-        flash("Erro ao encontrar o usuário para atualização.", 'error')
-
-    return redirect(url_for('rh'))
-
 @app.route('/unlock-user', methods=['POST'])
 def unlock_user():
     username = request.form.get('username')
@@ -190,7 +144,7 @@ def unlock_user():
     else:
         flash(f"Erro ao desbloquear o usuário: {resultado}", 'error')
 
-    return render_template('rh.html', flash_messages=get_flashed_messages(with_categories=True))
+    return redirect(url_for('index'))
    
 @app.route('/create_user', methods=['POST'])
 def create_user():
