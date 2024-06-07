@@ -21,29 +21,30 @@
         <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo" class="img-fluid">
       </a>
 
-      <!-- Formulário de Login -->
-      {% if not session.username %}
-        <form action="/login" method="POST" class="search-box1">
-          <div class="mb-3">
-            <label for="username" class="form-label">Usuário:</label>
-            <input type="text" id="username" name="username" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Senha:</label>
-            <input type="password" id="password" name="password" class="form-control" required>
-          </div>
-          <button type="submit" class="btn1 btn-primary">Login</button>
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }} mt-3">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-        </form>
-      {% endif %}
+        <!-- Formulário de Login -->
+        {% if not session.username %}
+          <form action="/login" method="POST" class="search-box1">
+             <div class="mb-3">
+                <label for="username" class="form-label">Usuário:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Senha:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+              </div>
+              <button type="submit" class="btn1 btn-primary">Login</button>
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mt-3">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+            </form>
+          {% endif %}
+          <div>
       
       <!-- Seção de pesquisa que será exibida após o login -->
       {% if session.username %}
@@ -81,8 +82,8 @@
         </div>
       </div>
       {% endif %}
-    </div> <!-- Fechando a div "result" -->
-
+      </div> <!-- Fechando a div "result" -->
+    </div>
   </section>
 
   <script>
@@ -120,5 +121,6 @@
 
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</body>
+</div>
+    </body>
 </html>

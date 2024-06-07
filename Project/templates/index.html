@@ -35,16 +35,16 @@
             </div>
             <button type="submit" class="btn1 btn-primary">Login</button>
             {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }} mt-3">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} mt-3">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
           </form>
-          {% endif %}
+        {% endif %}
         <div>
         
 
@@ -84,7 +84,7 @@
           <div class="chama_pagina">
             <a href="/users" class="btn btn-success">Criar Usuário</a>
           </div>
-          <div class="botao-criar">
+          <div class="chama_pagina">
             <a href="/logout" class="btn btn-danger">Sair</a>
           </div>
         </div>

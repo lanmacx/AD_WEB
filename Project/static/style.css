@@ -53,7 +53,8 @@ body {
 
 .search-box1 {
     border: 1px solid #ccc;
-    margin-top: 10px;
+    display: flex;
+    margin-top: 50px;
     padding: 10px;
     border-radius: 5px;
     background-color: #001a3f;
@@ -206,12 +207,12 @@ button.search {
     padding: 10px;
     border-radius: 5px;
     background-color: #001a3f;
-    width: 300px; /* Ajuste conforme necessário */
+    width: 100%; /* Ajuste conforme necessário */
     margin: 20px 0;
 }
 
 .chama_pagina button {
-    width: 94%;
+    width: 100%;
     padding: 9px;
     background-color: #007BFF;
     color: white;
@@ -245,7 +246,7 @@ button.search {
     align-items: center;
     background-color: #1a13a3;
     width: 460px;
-    height: 460px;
+    height: auto;
     padding: 35px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombras para melhor visualização */
     border-radius: 8px;       /* Bordas arredondadas para um estilo mais suave */
@@ -254,8 +255,9 @@ button.search {
 
 .btn1 {
     display: inline-block;
-    width: 94%;
+    width: 95%;
     padding: 9px;
+    margin-top: 15px;
     background-color: #007BFF;
     color: white;
     text-decoration: none;

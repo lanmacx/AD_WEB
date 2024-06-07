@@ -190,7 +190,7 @@ def unlock_user():
     else:
         flash(f"Erro ao desbloquear o usuário: {resultado}", 'error')
 
-    return render_template('rh.html', flash_messages=get_flashed_messages(with_categories=True))
+    return render_template('index.html', flash_messages=get_flashed_messages(with_categories=True))
    
 @app.route('/create_user', methods=['POST'])
 def create_user():
