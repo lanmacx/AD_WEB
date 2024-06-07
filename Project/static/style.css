@@ -17,7 +17,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     justify-content: center;
     align-items: center;
     border-radius: 8px; 
@@ -54,7 +54,6 @@ body {
 .search-box1 {
     border: 1px solid #ccc;
     display: flex;
-    margin-top: 50px;
     padding: 10px;
     border-radius: 5px;
     background-color: #001a3f;
@@ -282,4 +281,10 @@ button.search {
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
+}
+
+.table-container {
+    overflow-y: auto;
+    max-height: 250px;
+    width: auto;
 }

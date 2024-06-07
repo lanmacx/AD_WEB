@@ -102,6 +102,9 @@ def search():
 @app.route('/user.details', methods=['GET'])
 def search_user():
     query = request.args.get('query')
+    page = request.args.get('page', 1, type=int)  # Número da página atual
+    per_page = 4  # Número de resultados por página
+    
     if not query:
         flash("Por favor, forneça um nome de usuário para pesquisa.", 'error')
         return redirect(url_for('search_user'))
@@ -110,22 +113,29 @@ def search_user():
     server = Server(LDAP_SERVER, port=PORT_SSL, use_ssl=True, get_info=ALL)
     conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad, auto_bind=True)
     
-    search_filter = f'(sAMAccountName={query})'
+    search_filter = f'(cn={query}*)'
     conn.search(base_dn, search_filter, attributes=['cn', 'extensionAttribute1', 'extensionAttribute2', 'department', 'physicalDeliveryOfficeName', 
                                                     'title', 'telephoneNumber'])
 
     if conn.entries:
-        user = conn.entries[0]
-        user_info = {
-            "cn": str(user.cn),
-            "extensionAttribute1": str(user.extensionAttribute1),
-            "extensionAttribute2": str(user.extensionAttribute2),
-            "department": str(user.department),
-            "physicalDeliveryOfficeName": str(user.physicalDeliveryOfficeName), 
-            "title": str(user.title),
-            "telephoneNumber": str(user.telephoneNumber), 
-            }
-        return render_template('update.html', user=user_info)
+        users = conn.entries
+        
+        if(len(users)==1):
+            user = users[0]
+            user_info = {
+                "cn": str(user.cn),
+                "extensionAttribute1": str(user.extensionAttribute1),
+                "extensionAttribute2": str(user.extensionAttribute2),
+                "department": str(user.department),
+                "physicalDeliveryOfficeName": str(user.physicalDeliveryOfficeName), 
+                "title": str(user.title),
+                "telephoneNumber": str(user.telephoneNumber), 
+                }
+            
+            return render_template('update.html', user=user_info)
+        else:            
+            return render_template('rh.html', users=users)
+            
     else:
         flash("Usuário não encontrado no Active Directory.", 'error')
         return render_template('rh.html', user=None)
@@ -190,7 +200,7 @@ def unlock_user():
     else:
         flash(f"Erro ao desbloquear o usuário: {resultado}", 'error')
 
-    return render_template('index.html', flash_messages=get_flashed_messages(with_categories=True))
+    return render_template('rh.html', flash_messages=get_flashed_messages(with_categories=True))
    
 @app.route('/create_user', methods=['POST'])
 def create_user():

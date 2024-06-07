@@ -63,7 +63,35 @@
           </div>
         </form>
       </div>
-      {% endif %}
+      
+      <div class="table-container">
+        <table class="table">
+          <thead>
+          {% if users %}
+            <tr>
+                <th>Nome</th>
+                <th>Ações</th>
+            </tr>
+           {% endif %} 
+        </thead>
+        
+        <tbody>
+        
+            {% for user in users %}
+            <tr>
+                <td>{{ user.cn }}</td>
+                <td>
+                    <a href="/user.details?query={{ user.cn }}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+  </div>
+    {% endif %}
       
       {% with messages = get_flashed_messages(with_categories=true) %}
          {% if messages %}
@@ -80,9 +108,13 @@
         <div class="chama_pagina">
             <a href="/logout" class="btn btn-danger">Sair</a>
         </div>
+       
       </div>
+      
       {% endif %}
+      
       </div> <!-- Fechando a div "result" -->
+    
     </div>
   </section>
 

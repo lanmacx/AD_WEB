@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Resultado da Pesquisa</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./static/style.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./static/users.css">
+</head>
+<body>
+    <section class="area-result">
+        <div class="result1">
+            <div>
+                <a href="/">
+                    <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
+                </a>
+            </div>
+            {% if user %}
+              <h1>Detalhes do Usuário</h1>
+              <form action="/user.update" method="POST" class="search-box2">
+                <div class="input-group1">
+                  <label for="cn" class="form-label"><strong>Nome:</strong></label>
+                  <input type="text" id="cn" name="cn" class="form-control form-control-sm" value="{{ user.cn }}">
+                </div>
+                <div class="input-group1">
+                  <label for="extensionAttribute1" class="form-label"><strong>Data de Nascimento:</strong></label>
+                  <input type="text" id="extensionAttribute1" name="extensionAttribute1" class="form-control form-control-sm" value="{{ user.extensionAttribute1 }}">
+                </div>
+                <div class="input-group1">
+                  <label for="extensionAttribute2" class="form-label"><strong>Data de Contratação:</strong></label>
+                  <input type="text" id="extensionAttribute2" name="extensionAttribute2" class="form-control form-control-sm" value="{{ user.extensionAttribute2 }}">
+                </div>
+                <div class="input-group1">
+                  <label for="department" class="form-label"><strong>Departamento:</strong></label>
+                  <input type="text" id="department" name="department" class="form-control form-control-sm" value="{{ user.department }}">
+                </div>
+                <div class="input-group1">
+                  <label for="physicalDeliveryOfficeName" class="form-label"><strong>Regional:</strong></label>
+                  <input. type="text" id="physicalDeliveryOfficeName" name="physicalDeliveryOfficeName" class="form-control form-control-sm" value="{{ user.physicalDeliveryOfficeName }}">
+                </div>
+                <div class="input-group1">
+                  <label for="title" class="form-label"><strong>Cargo:</strong></label>
+                  <input type="text" id="title" name="title" class="form-control form-control-sm" value="{{ user.title }}">
+                </div>
+                <div class="input-group1">
+                  <label for="telephoneNumber" class="form-label"><strong>Telefone:</strong></label>
+                  <input type="text" id="telephoneNumber" name="telephoneNumber" class="form-control form-control-sm" value="{{ user.telephoneNumber }}">
+                </div>
+                <button type="submit" class="btn1 btn-primary">Salvar Alterações</button>
+              </form>
+            {% endif %}
+    
+            <form action="/" method="get">
+                <button type="submit" class="voltar">Voltar</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- JavaScript para controle de expansão -->
+    <script>
+        // Adicionar evento de clique aos ícones de expansão
+        document.querySelectorAll('.expand-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const details = this.parentElement.nextElementSibling;
+                // Alternar a visibilidade dos detalhes do usuário
+                details.classList.toggle('show');
+            });
+        });
+    </script>
+</body>
+</html>
