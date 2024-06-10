@@ -24,6 +24,10 @@
               <h1>Detalhes do Usuário</h1>
               <form action="/user.update" method="POST" class="search-box2">
                 <div class="input-group1">
+                  <label for="employeeID" class="form-label"><strong>Matrícula:</strong></label>
+                  <input type="text" id="employeeID" name="employeeID" class="form-control form-control-sm" value="{{ user.employeeID }}">
+                </div>
+                <div class="input-group1">
                   <label for="cn" class="form-label"><strong>Nome:</strong></label>
                   <input type="text" id="cn" name="cn" class="form-control form-control-sm" value="{{ user.cn }}">
                 </div>

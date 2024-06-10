@@ -114,7 +114,7 @@ def search_user():
     conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad, auto_bind=True)
     
     search_filter = f'(cn={query}*)'
-    conn.search(base_dn, search_filter, attributes=['cn', 'extensionAttribute1', 'extensionAttribute2', 'department', 'physicalDeliveryOfficeName', 
+    conn.search(base_dn, search_filter, attributes=['employeeID','cn', 'extensionAttribute1', 'extensionAttribute2', 'department', 'physicalDeliveryOfficeName', 
                                                     'title', 'telephoneNumber'])
 
     if conn.entries:
@@ -123,6 +123,7 @@ def search_user():
         if(len(users)==1):
             user = users[0]
             user_info = {
+                "employeeID": str(user.employeeID),
                 "cn": str(user.cn),
                 "extensionAttribute1": str(user.extensionAttribute1),
                 "extensionAttribute2": str(user.extensionAttribute2),
