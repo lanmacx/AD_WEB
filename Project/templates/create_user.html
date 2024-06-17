@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Form</title>
+</head>
+<body>
+
+<form id="completeForm" method="POST" action="/complete_form">
+    <h2>Complete Form</h2>
+    <p><strong>Matrícula:</strong> <span id="employeeID"></span></p>
+    <p><strong>Nome:</strong> <span id="nome"></span></p>
+    <p><strong>Sobrenome:</strong> <span id="sobrenome"></span></p>
+    <p><strong>Data de Nascimento:</strong> <span id="data_nascimento"></span></p>
+    <p><strong>Data de Contratação:</strong> <span id="data_contratacao"></span></p>
+    <p><strong>Departamento:</strong> <span id="departamento"></span></p>
+    <p><strong>Cargo:</strong> <span id="cargo"></span></p>
+    <p><strong>Telefone:</strong> <span id="telefone"></span></p>
+    <p><strong>Regional:</strong> <span id="regional"></span></p>
+    <p><strong>Physical Delivery Office Name:</strong> <span id="physicalDeliveryOfficeName"></span></p>
+    <p><strong>State:</strong> <span id="st"></span></p>
+    <p><strong>Company:</strong> <span id="company"></span></p>
+    <p><strong>Usuário Desktop:</strong> <span id="logon_sAMAccountName"></span></p>
+    <p><strong>Email:</strong> <span id="logon_email"></span></p>
+
+    <!-- New fields -->
+    <label for="logon">Login Desktop:</label>
+    <input type="text" id="logon" name="logon"><br><br>
+
+    <label for="password">Senha:</label>
+    <input type="text" id="password" name="password"><br><br>
+
+    <!-- Hidden inputs to carry over previous data -->
+    <input type="hidden" name="employeeID" id="hidden_employeeID">
+    <input type="hidden" name="nome" id="hidden_nome">
+    <input type="hidden" name="sobrenome" id="hidden_sobrenome">
+    <input type="hidden" name="data_nascimento" id="hidden_data_nascimento">
+    <input type="hidden" name="data_contratacao" id="hidden_data_contratacao">
+    <input type="hidden" name="departamento" id="hidden_departamento">
+    <input type="hidden" name="cargo" id="hidden_cargo">
+    <input type="hidden" name="telefone" id="hidden_telefone">
+    <input type="hidden" name="regional" id="hidden_regional">
+    <input type="hidden" name="physicalDeliveryOfficeName" id="hidden_physicalDeliveryOfficeName">
+    <input type="hidden" name="st" id="hidden_st">
+    <input type="hidden" name="company" id="hidden_company">
+    <input type="hidden" name="logon_sAMAccountName" id="hidden_logon_sAMAccountName">
+    <input type="hidden" name="logon_email" id="hidden_logon_email">
+
+    <button type="submit">Criar Usuario</button>
+</form>
+
+<script>
+    document.getElementById('logon').addEventListener('input', function() {
+        var logonName = this.value;
+        var emailDomain = '@amchambrasil.com.br';
+        document.getElementById('logon_sAMAccountName').value = logonName;
+        document.getElementById('logon_email').value = logonName + emailDomain;
+      });
+
+    // Function to get query parameters from URL
+    function getQueryParams() {
+        const params = {};
+        window.location.search.substring(1).split("&").forEach(function(pair) {
+            const [key, value] = pair.split("=");
+            params[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return params;
+    }
+
+    // Populate form with query parameters
+    window.onload = function() {
+        const params = getQueryParams();
+        document.getElementById('employeeID').innerText = params.employeeID;
+        document.getElementById('nome').innerText = params.nome;
+        document.getElementById('sobrenome').innerText = params.sobrenome;
+        document.getElementById('data_nascimento').innerText = params.data_nascimento;
+        document.getElementById('data_contratacao').innerText = params.data_contratacao;
+        document.getElementById('departamento').innerText = params.departamento;
+        document.getElementById('cargo').innerText = params.cargo;
+        document.getElementById('telefone').innerText = params.telefone;
+        document.getElementById('regional').innerText = params.regional;
+        document.getElementById('physicalDeliveryOfficeName').innerText = params.physicalDeliveryOfficeName;
+        document.getElementById('st').innerText = params.st;
+        document.getElementById('company').innerText = params.company;
+        document.getElementById('logon_sAMAccountName').innerText = params.logon_sAMAccountName;
+        document.getElementById('logon_email').innerText = params.logon_email;
+
+        // Set hidden inputs
+        document.getElementById('hidden_employeeID').value = params.employeeID;
+        document.getElementById('hidden_nome').value = params.nome;
+        document.getElementById('hidden_sobrenome').value = params.sobrenome;
+        document.getElementById('hidden_data_nascimento').value = params.data_nascimento;
+        document.getElementById('hidden_data_contratacao').value = params.data_contratacao;
+        document.getElementById('hidden_departamento').value = params.departamento;
+        document.getElementById('hidden_cargo').value = params.cargo;
+        document.getElementById('hidden_telefone').value = params.telefone;
+        document.getElementById('hidden_regional').value = params.regional;
+        document.getElementById('hidden_physicalDeliveryOfficeName').value = params.physicalDeliveryOfficeName;
+        document.getElementById('hidden_st').value = params.st;
+        document.getElementById('hidden_company').value = params.company;
+        document.getElementById('hidden_logon_sAMAccountName').value = params.logon_sAMAccountName;
+        document.getElementById('hidden_logon_email').value = params.logon_email;
+    };
+</script>
+
+</body>
+</html>

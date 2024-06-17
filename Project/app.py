@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, flash, session, get_flashed_messages
+import logging
+from flask import Flask, request, render_template, redirect, url_for, flash, session, get_flashed_messages, send_from_directory
 from functools import wraps
 import os
 from dotenv import load_dotenv
@@ -6,11 +7,17 @@ from services import verificar_login, verificar_expiracao_senha, alterar_senha_u
 from config import *
 from datetime import datetime, timedelta, timezone
 from ldap3 import Server, Connection, ALL, SUBTREE, SIMPLE, AUTO_BIND_TLS_BEFORE_BIND, MODIFY_REPLACE, AUTO_BIND_NO_TLS
+from email_service import send_email
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Necessário para usar flash messages
 load_dotenv()  # Carregar variáveis de ambiente do arquivo .env
+logging.basicConfig(level=logging.DEBUG)
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -48,7 +55,7 @@ def login():
                 
         else:
             flash('Nome de usuário ou senha inválidos.', 'error')
-       
+    # send_email("teste", "allan.santos@amchambrasil.com.br","teste")
     return render_template('index.html')
     
 @app.route('/logout')
@@ -73,6 +80,61 @@ def index():
 def rh():
     return render_template('rh.html')
 
+@app.route('/create_rh', methods=['GET'])
+def get_create_rh():
+    if 'username' in session:
+        print(session['permissao'])
+        if session['permissao'] == 'RH': 
+            return render_template('create_rh.html')
+        else:
+            return redirect(url_for('rh'))
+        
+@app.route('/create_rh', methods=['POST'])
+def post_create_rh():
+    if 'username' in session and session['permissao'] == 'RH':
+        employeeID = request.form.get('employeeID')
+        nome = request.form.get('nome')
+        sobrenome = request.form.get('sobrenome')
+        data_nascimento = request.form.get('extensionAttribute1')
+        data_contratacao = request.form.get('extensionAttribute2')
+        departamento = request.form.get('department')
+        cargo = request.form.get('cargo')
+        telephoneNumber = request.form.get('telephoneNumber')
+        regional = request.form.get('regional')
+        physicalDeliveryOfficeName = request.form.get('physicalDeliveryOfficeName')
+        st = request.form.get('st')
+        company = request.form.get('company')
+        
+        query_params = f"?employeeID={employeeID}&nome={nome}&sobrenome={sobrenome}&data_nascimento={data_nascimento}&data_contratacao={data_contratacao}&departamento={departamento}&cargo={cargo}&telephoneNumber={telephoneNumber}&regional={regional}&physicalDeliveryOfficeName={physicalDeliveryOfficeName}&st={st}&company={company}"
+        
+        email_body = f"""
+        <html>
+            <body>
+                <h2>Criar usuário</h2>
+                <p><strong>Matrícula:</strong> {employeeID}</p>
+                <p><strong>Nome:</strong> {nome}</p>
+                <p><strong>Sobrenome:</strong> {sobrenome}</p>
+                <p><strong>Data de Nascimento:</strong> {data_nascimento}</p>
+                <p><strong>Data de Contratação:</strong> {data_contratacao}</p>
+                <p><strong>Departamento:</strong> {departamento}</p>
+                <p><strong>Cargo:</strong> {cargo}</p>
+                <p><strong>Telefone:</strong> {telephoneNumber}</p>
+                <p><strong>Regional:</strong> {regional}</p>
+                <p><strong>Physical Delivery Office Name:</strong> {physicalDeliveryOfficeName}</p>
+                <p><strong>State:</strong> {st}</p>
+                <p><strong>Company:</strong> {company}</p>
+                <a href="http://localhost:5000/complete_form{query_params}">
+                    <button type="button">Complete Form</button>
+                </a>
+                
+            </body>
+        </html>
+        """
+        
+        send_email("Criar usuário", "allan.santos@amchambrasil.com.br", email_body)
+
+        return redirect(url_for('rh'))
+
 @app.route('/users')
 def users():
     if 'username' in session:
@@ -86,6 +148,7 @@ def users():
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query')
+    
     if query:
         resultado, expiracao, encontrado, expirou, bloqueado = verificar_expiracao_senha(query)
         if encontrado:
@@ -102,8 +165,8 @@ def search():
 @app.route('/user.details', methods=['GET'])
 def search_user():
     query = request.args.get('query')
-    page = request.args.get('page', 1, type=int)  # Número da página atual
-    per_page = 4  # Número de resultados por página
+    # page = request.args.get('page', 1, type=int)  # Número da página atual
+    # per_page = 4  # Número de resultados por página
     
     if not query:
         flash("Por favor, forneça um nome de usuário para pesquisa.", 'error')
@@ -203,58 +266,86 @@ def unlock_user():
 
     return render_template('rh.html', flash_messages=get_flashed_messages(with_categories=True))
    
+@app.route('/complete_form', methods=['GET', 'POST'])
+def complete_form():
+    if request.method == 'GET':
+        # Obtendo os parâmetros da URL
+        logging.debug('Requisição GET recebida com os seguintes parâmetros:')
+        employeeID = request.form.get('employeeID')
+        nome = request.form.get('nome')
+        sobrenome = request.form.get('sobrenome')
+        data_nascimento = request.form.get('data_nascimento')
+        data_contratacao = request.form.get('data_contratacao')
+        cargo = request.form.get('cargo')
+        telephoneNumber = request.form.get('telephoneNumber')
+        physicalDeliveryOfficeName = request.form.get('physicalDeliveryOfficeName')
+        st = request.form.get('st')
+        company = request.form.get('company')
+
+        # Renderizando o formulário com os dados passados na URL
+        return render_template('complete_form.html', 
+                                employeeID=employeeID, 
+                                nome=nome, 
+                                sobrenome=sobrenome, 
+                                data_nascimento=data_nascimento, 
+                                data_contratacao=data_contratacao, 
+                                cargo=cargo, 
+                                telephoneNumber=telephoneNumber, 
+                                physicalDeliveryOfficeName=physicalDeliveryOfficeName, 
+                                st=st, 
+                                company=company)
+        
 @app.route('/create_user', methods=['POST'])
 def create_user():
     try:
-        primeiro_nome = request.form['primeiro_nome']
-        sobrenome = request.form['sobrenome']
-        logon = request.form['logon']
-        email = logon + '@amchambrasil.com.br'  # Adiciona o domínio ao logon para criar o userPrincipalName
-        sAMAccountName = request.form['logon_sAMAccountName']
-        password = request.form['password']
-        regional = request.form['regional']
-        nascimento = request.form['dateofbrith']
-      
+        # Obtendo os valores do formulário com request.form.get() e fornecendo valores padrão vazios
+        employeeID = request.form.get('employeeID', '').strip()
+        nome = request.form.get('nome', '').strip()
+        sobrenome = request.form.get('sobrenome', '').strip()
+        logon = request.form.get('logon', '').strip()
+        email = request.form.get('logon_email'),  # O e-mail já está incluído nos campos ocultos
+        sAMAccountName = request.form.get('logon_sAMAccountName', '').strip()
+        password = request.form.get('password', '').strip()
+        regional = request.form.get('regional', '').strip()
+        nascimento = request.form.get('data_nascimento', '').strip()
+        contratacao = request.form.get('data_contratacao', '').strip()
+        
         # Atributos adicionais
-        physicalDeliveryOfficeName = request.form['physicalDeliveryOfficeName']
-        st = request.form['st']
-        company = request.form['company']
-        description = request.form['description']
-        title = request.form['title']
-        department = request.form['department']
+        physicalDeliveryOfficeName = request.form.get('physicalDeliveryOfficeName', '').strip()
+        st = request.form.get('st', '').strip()
+        company = request.form.get('company', '').strip()
+        description = request.form.get('departamento', '').strip()
+        title = request.form.get('cargo', '').strip()
+        department = request.form.get('departamento', '').strip()
         
         print(f"Campos do formulário: {request.form}")
 
         # Validação dos campos
-        if not all([primeiro_nome, sobrenome, logon, sAMAccountName, email, password, regional]):
+        if not all([nome, sobrenome, logon, sAMAccountName, email, password, regional]):
             flash('Por favor, preencha todos os campos.', 'error')
             return redirect(url_for('index'))
 
-        # Conectando ao servidor AD        
         print(f"Tentando conectar ao servidor AD: {LDAP_SERVER}:{PORT_SSL}")
         server = Server(LDAP_SERVER, port=PORT_SSL, get_info=ALL)
         conn = Connection(server, user=f"{usuario_ad}@{dominio_ad}", password=senha_ad,
                           auto_bind=True, authentication=SIMPLE, raise_exceptions=False)
 
-        if not conn.bind():           
-            print(f"Falha na conexão LDAP: {conn.result}")
-            flash(f"Erro de conexão com o servidor AD: {conn.result['description']}", 'error')
-            return redirect(url_for('index'))
-
         print("Conexão LDAP estabelecida com sucesso.")
-
+    
         # Informações do novo usuário
-        user_dn = f'CN={primeiro_nome} {sobrenome},OU=Standard,OU=Users,OU={regional},DC=amchambr,DC=com,DC=br'
+        user_dn = f'CN={nome} {sobrenome},OU=Standard,OU=Users,OU={regional},DC=amchambr,DC=com,DC=br'
         user_attributes = {
             'objectClass': ['top', 'person', 'organizationalPerson', 'user'],
-            'cn': f'{primeiro_nome} {sobrenome}',
+            'employeeID': employeeID,
+            'cn': f'{nome} {sobrenome}',
             'sn': sobrenome,
-            'givenName': primeiro_nome,
+            'givenName': nome,
             'sAMAccountName': sAMAccountName,
-            'userPrincipalName': f'{sAMAccountName}@amchambr.com.br',  # Utiliza o email como userPrincipalName
-            'displayName': f'{primeiro_nome} {sobrenome}',
+            'userPrincipalName': f'{logon}@amchambr.com.br',
+            'displayName': f'{nome} {sobrenome}',
             'mail': email,
             'extensionAttribute1': nascimento,
+            'extensionAttribute2': contratacao,
             'userAccountControl': 512,  # Conta normal
             'unicodePwd': f'"{password}"'.encode('utf-16-le'),
             # Atributos adicionais
@@ -265,20 +356,22 @@ def create_user():
             'title': title,
             'department': department,
         }
+        
+        # Remove atributos com valor None ou vazio
+        user_attributes = {k: v for k, v in user_attributes.items() if v}
 
         # Criando o usuário no AD
         if not conn.add(user_dn, attributes=user_attributes):
             print(f"Erro ao adicionar usuário no AD: {conn.result}")
             flash(f"Erro ao criar usuário: {conn.result['description']}", 'error')
             return redirect(url_for('index'))
-
-        # Adicionando a senha separadamente
+        
+         # Adicionando a senha separadamente
         if not conn.modify(user_dn, {'unicodePwd': [(MODIFY_REPLACE, [f'"{password}"'.encode('utf-16-le')])]}):
             print(f"Erro ao definir senha do usuário: {conn.result}")
             flash(f"Erro ao definir senha do usuário: {conn.result['description']}", 'error')
             return redirect(url_for('index'))
-        
-        
+
         # Se tudo ocorreu bem até aqui, exibir mensagem de sucesso
         flash('Usuário criado com sucesso!', 'success')
         return redirect(url_for('index'))
@@ -287,6 +380,6 @@ def create_user():
         print(f"Erro ao criar usuário: {str(e)}")
         flash(f"Erro ao criar usuário: {str(e)}", 'error')
         return redirect(url_for('index'))
-       
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
