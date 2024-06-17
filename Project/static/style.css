@@ -141,7 +141,7 @@ button.search {
     justify-content: center;
     display: flex;
     align-items: center;
-    height: 25vh;
+    height: 10vh;
 
 }
 
@@ -290,7 +290,8 @@ button.search {
 }
 
 .table-container {
+    margin-top: 40px;
     overflow-y: auto;
-    max-height: 250px;
+    max-height: 200px;
     width: auto;
 }

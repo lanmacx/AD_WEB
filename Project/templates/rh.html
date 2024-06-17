@@ -15,7 +15,7 @@
 </head>
 
 <body>
-  <section class="area-result">
+  <section class="area-pesquisa">
     <div class="result">
       <a href="/">
         <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo" class="img-fluid">
@@ -50,6 +50,7 @@
       {% if session.username %}
       <div class="logado"><p>Bem-vindo(a), {{ session.username }}!</p>
       </div>
+    </div>
       <div class="pesquisa mt-3">
         <form action="/user.details" method="GET" class="search-form">
           <div class="search-box js-search-box">
