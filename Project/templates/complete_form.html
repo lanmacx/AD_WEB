@@ -1,31 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Complete Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@0,400;1,700" rel="stylesheet">
+    <title>Criar Usuários</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+</head>
+    <link rel="stylesheet" href="./static/form.css">
 </head>
 <body>
-    <form id="completeForm" method="POST" action="/create_user">
-        <h2>Complete Form</h2>
-        <p><strong>Matrícula:</strong> <span id="employeeID"></span></p>
-        <p><strong>Nome:</strong> <span id="nome"></span></p>
-        <p><strong>Sobrenome:</strong> <span id="sobrenome"></span></p>
-        <p><strong>Data de Nascimento:</strong> <span id="data_nascimento"></span></p>
-        <p><strong>Data de Contratação:</strong> <span id="data_contratacao"></span></p>
-        <p><strong>Departamento:</strong> <span id="departamento"></span></p>
-        <p><strong>Cargo:</strong> <span id="cargo"></span></p>
-        <p><strong>Telefone:</strong> <span id="telephoneNumber"></span></p>
-        <p><strong>Regional:</strong> <span id="regional"></span></p>
-        <p><strong>Physical Delivery Office Name:</strong> <span id="physicalDeliveryOfficeName"></span></p>
-        <p><strong>State:</strong> <span id="st"></span></p>
-        <p><strong>Company:</strong> <span id="company"></span></p>
+    <section class="area-result">
+        <div class="result">
+          <a href="/">
+            <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
+          </a>
+          <!-- Formulário de Login -->
+          {% if not session.username %}
+            <form action="/login" method="POST" class="search-box1">
+              <div class="mb-3">
+                <label for="username" class="form-label">Usuário:</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Senha:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+              </div>
+              <button type="submit" class="btn1 btn-primary">Login</button>
+            </form>
+            <div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
+
+      <!-- Seção de pesquisa que será exibida após o login -->
+        {% if session.username %}
+        <h1>Complete os Dados</h2>
+        <form id="completeForm" method="POST" action="/create_user" class="search-box1">
+            <div class="form-container">
+                <div class="input-group">
+                    <p><strong>Matrícula:</strong> <span id="employeeID"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Nome:</strong> <span id="nome"></span></p>
+                </div>
+                <div class="input-group">    
+                    <p><strong>Sobrenome:</strong> <span id="sobrenome"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Data de Nascimento:</strong> <span id="data_nascimento"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Data de Contratação:</strong> <span id="data_contratacao"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Departamento:</strong> <span id="departamento"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Cargo:</strong> <span id="cargo"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Telefone:</strong> <span id="telephoneNumber"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Regional:</strong> <span id="regional"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Cidade:</strong> <span id="physicalDeliveryOfficeName"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Estado:</strong> <span id="st"></span></p>
+                </div>
+                <div class="input-group">
+                    <p><strong>Empresa:</strong> <span id="company"></span></p>
+                </div>
+
+            </div>
 
         <!-- New fields -->
-        <label for="logon">Login:</label>
-        <input type="text" id="logon" name="logon"><br><br>
-
-        <label for="password">Senha:</label>
-        <input type="text" id="password" name="password"><br><br>
+        <div class="input-group">
+            <label for="logon">Login:</label>
+            <input type="text" id="logon" name="logon"><br><br>
+        </div>
+        <div class="input-group">
+            <label for="password">Senha:</label>
+            <input type="text" id="password" name="password"><br><br>
+        </div>
 
         <!-- Hidden inputs to carry over previous data -->
         <input type="hidden" name="employeeID" id="hidden_employeeID">
@@ -43,8 +116,22 @@
         <input type="hidden" name="logon_sAMAccountName" id="hidden_logon_sAMAccountName">
         <input type="hidden" name="logon_email" id="hidden_logon_email">
 
-        <button type="submit">Submit</button>
+        <button type="submit">Criar</button>
     </form>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      </div>
+    {% endif %}
+  </div>
+</section>
 
     <script>
         document.getElementById('logon').addEventListener('input', function() {

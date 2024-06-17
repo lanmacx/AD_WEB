@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="./static/form.css">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
@@ -20,6 +20,8 @@
                 <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
             </a>
             {% if session.username %}
+            <div class="logado"><p>Bem-vindo(a), {{ session.username }}!</p>
+            </div>
             <h1>Detalhes do Usuário</h1>
             <form action="/create_rh" method="POST" class="search-box1">
                 <div class="input-group1">
@@ -54,7 +56,7 @@
                     <label for="telephoneNumber" class="form-label"><strong>Telefone:</strong></label>
                     <input type="text" id="telephoneNumber" name="telephoneNumber" class="form-control form-control-sm">
                 </div>
-                <div class="input-group1">
+                <div class="input-group">
                     <select name="regional" id="regional" required>
                         <option value="">Selecione a Regional</option>
                         <option value="UR_BHE">Belo Horizonte</option>
@@ -92,6 +94,9 @@
               {% endwith %}
             </div>
             {% endif %}
+            <form action="/" method="get">
+              <button type="submit" class="voltar">Voltar</button>
+          </form>
         </div>
     </section>
     <script>

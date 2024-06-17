@@ -43,6 +43,8 @@
 
         <!-- Seção de pesquisa que será exibida após o login -->
         {% if session.username %}
+        <div class="logado"><p>Bem-vindo(a), {{ session.username }}!</p>
+        </div>
         <div class="pesquisa mt-3">
           <form action="/search" method="GET" class="search-form">
             <div class="search-box js-search-box">
@@ -60,6 +62,7 @@
           </form>
           
         </div>
+      </div>
         {% endif %}
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -74,9 +77,6 @@
 
         {% if session.username %}
         <div class="botao-criar mt-3">
-          <div class="chama_pagina">
-            <a href="/users" class="btn btn-success">Criar Usuário</a>
-          </div>
           <div class="chama_pagina">
             <a href="/logout" class="btn btn-danger">Sair</a>
           </div>

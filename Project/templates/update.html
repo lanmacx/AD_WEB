@@ -6,14 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./static/style.css">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-</head>
     <link rel="stylesheet" href="./static/users.css">
 </head>
 <body>
-    <section class="area-pesquisa">
+    <section class="area-result">
         <div class="result1">
             <div>
                 <a href="/">
@@ -21,6 +19,8 @@
                 </a>
             </div>
             {% if user %}
+            <div class="logado"><p>Bem-vindo(a), {{ session.username }}!</p>
+            </div>
               <h1>Detalhes do Usuário</h1>
               <form action="/user.update" method="POST" class="search-box2">
                 <div class="input-group1">

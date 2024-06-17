@@ -133,6 +133,7 @@ def post_create_rh():
         
         send_email("Criar usuário", "allan.santos@amchambrasil.com.br", email_body)
 
+        flash('Enviado com sucesso!', 'success')
         return redirect(url_for('rh'))
 
 @app.route('/users')
