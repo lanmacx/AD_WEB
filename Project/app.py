@@ -267,7 +267,7 @@ def unlock_user():
     else:
         flash(f"Erro ao desbloquear o usuário: {resultado}", 'error')
 
-    return render_template('rh.html', flash_messages=get_flashed_messages(with_categories=True))
+    return render_template('index.html', flash_messages=get_flashed_messages(with_categories=True))
    
 @app.route('/complete_form', methods=['GET', 'POST'])
 def complete_form():
@@ -385,4 +385,4 @@ def create_user():
         return redirect(url_for('index'))
         
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=3000, debug=True)
