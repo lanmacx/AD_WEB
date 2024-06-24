@@ -11,137 +11,97 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-</head>
     <link rel="stylesheet" href="./static/form.css">
 </head>
 <body>
     <section class="area-result">
         <div class="result">
-          <a href="/">
-            <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
-          </a>
-          <!-- Formulário de Login -->
-          {% if not session.username %}
-            <form action="/login" method="POST" class="search-box1">
-              <div class="mb-3">
-                <label for="username" class="form-label">Usuário:</label>
-                <input type="text" id="username" name="username" class="form-control" required>
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Senha:</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-              </div>
-              <button type="submit" class="btn1 btn-primary">Login</button>
-            </form>
-            <div>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
+            <a href="/">
+                <img src="https://estatico.amcham.com.br/logo_white.png" alt="Logo">
+            </a>
+            
+            <!-- Verifica se o usuário está logado -->
+            {% if session.username %}
+                <h1>Complete os Dados</h1>
+                <form id="completeForm" method="POST" action="/create_user" class="search-box1">
+                    <div class="form-container">
+                        <div class="input-group">
+                            <p><strong>Matrícula:</strong> <span id="employeeID">{{ employeeID }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Nome:</strong> <span id="nome">{{ nome }}</span></p>
+                        </div>
+                        <div class="input-group">    
+                            <p><strong>Sobrenome:</strong> <span id="sobrenome">{{ sobrenome }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Data de Nascimento:</strong> <span id="data_nascimento">{{ data_nascimento }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Data de Contratação:</strong> <span id="data_contratacao">{{ data_contratacao }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Departamento:</strong> <span id="departamento">{{ departamento }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Cargo:</strong> <span id="cargo">{{ cargo }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Telefone:</strong> <span id="telephoneNumber">{{ telephoneNumber }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Regional:</strong> <span id="regional">{{ regional }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Cidade:</strong> <span id="physicalDeliveryOfficeName">{{ physicalDeliveryOfficeName }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Estado:</strong> <span id="st">{{ st }}</span></p>
+                        </div>
+                        <div class="input-group">
+                            <p><strong>Empresa:</strong> <span id="company">{{ company }}</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Campos ocultos para enviar os dados -->
+                    <input type="hidden" name="employeeID" value="{{ employeeID }}">
+                    <input type="hidden" name="nome" value="{{ nome }}">
+                    <input type="hidden" name="sobrenome" value="{{ sobrenome }}">
+                    <input type="hidden" name="data_nascimento" value="{{ data_nascimento }}">
+                    <input type="hidden" name="data_contratacao" value="{{ data_contratacao }}">
+                    <input type="hidden" name="departamento" value="{{ departamento }}">
+                    <input type="hidden" name="cargo" value="{{ cargo }}">
+                    <input type="hidden" name="telephoneNumber" value="{{ telephoneNumber }}">
+                    <input type="hidden" name="regional" value="{{ regional }}">
+                    <input type="hidden" name="physicalDeliveryOfficeName" value="{{ physicalDeliveryOfficeName }}">
+                    <input type="hidden" name="st" value="{{ st }}">
+                    <input type="hidden" name="company" value="{{ company }}">
+                    <input type="hidden" name="logon_sAMAccountName" id="hidden_logon_sAMAccountName">
+                    <input type="hidden" name="logon_email" id="hidden_logon_email">
+                    
+                    <!-- Botão para enviar o formulário -->
+                    <button type="submit">Criar</button>
+                </form>
+                
+                <!-- Exibe mensagens flash se houver -->
+                <div class="flash-messages">
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
                         <ul class="messages">
-                            {% for message in messages %}
-                                <li>{{ message }}</li>
-                            {% endfor %}
+                          {% for message in messages %}
+                            <li>{{ message }}</li>
+                          {% endfor %}
                         </ul>
-                    {% endif %}
-                {% endwith %}
-            </div>
-        {% endif %}
-
-      <!-- Seção de pesquisa que será exibida após o login -->
-        {% if session.username %}
-        <h1>Complete os Dados</h2>
-        <form id="completeForm" method="POST" action="/create_user" class="search-box1">
-            <div class="form-container">
-                <div class="input-group">
-                    <p><strong>Matrícula:</strong> <span id="employeeID"></span></p>
+                      {% endif %}
+                    {% endwith %}
                 </div>
-                <div class="input-group">
-                    <p><strong>Nome:</strong> <span id="nome"></span></p>
-                </div>
-                <div class="input-group">    
-                    <p><strong>Sobrenome:</strong> <span id="sobrenome"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Data de Nascimento:</strong> <span id="data_nascimento"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Data de Contratação:</strong> <span id="data_contratacao"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Departamento:</strong> <span id="departamento"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Cargo:</strong> <span id="cargo"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Telefone:</strong> <span id="telephoneNumber"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Regional:</strong> <span id="regional"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Cidade:</strong> <span id="physicalDeliveryOfficeName"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Estado:</strong> <span id="st"></span></p>
-                </div>
-                <div class="input-group">
-                    <p><strong>Empresa:</strong> <span id="company"></span></p>
-                </div>
-
-            </div>
-
-        <!-- New fields -->
-        <div class="input-group">
-            <label for="logon">Login:</label>
-            <input type="text" id="logon" name="logon"><br><br>
+            {% endif %}
         </div>
-        <div class="input-group">
-            <label for="password">Senha:</label>
-            <input type="text" id="password" name="password"><br><br>
-        </div>
+    </section>
 
-        <!-- Hidden inputs to carry over previous data -->
-        <input type="hidden" name="employeeID" id="hidden_employeeID">
-        <input type="hidden" name="nome" id="hidden_nome">
-        <input type="hidden" name="sobrenome" id="hidden_sobrenome">
-        <input type="hidden" name="data_nascimento" id="hidden_data_nascimento">
-        <input type="hidden" name="data_contratacao" id="hidden_data_contratacao">
-        <input type="hidden" name="departamento" id="hidden_departamento">
-        <input type="hidden" name="cargo" id="hidden_cargo">
-        <input type="hidden" name="telephoneNumber" id="hidden_telephoneNumber">
-        <input type="hidden" name="regional" id="hidden_regional">
-        <input type="hidden" name="physicalDeliveryOfficeName" id="hidden_physicalDeliveryOfficeName">
-        <input type="hidden" name="st" id="hidden_st">
-        <input type="hidden" name="company" id="hidden_company">
-        <input type="hidden" name="logon_sAMAccountName" id="hidden_logon_sAMAccountName">
-        <input type="hidden" name="logon_email" id="hidden_logon_email">
-
-        <button type="submit">Criar</button>
-    </form>
-    <div class="flash-messages">
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class="messages">
-              {% for message in messages %}
-                <li>{{ message }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
-      </div>
-    {% endif %}
-  </div>
-</section>
-
+    <!-- Script JavaScript para pré-popular o formulário com os parâmetros da URL -->
     <script>
-        document.getElementById('logon').addEventListener('input', function() {
-            var logonName = this.value;
-            var emailDomain = '@amchambrasil.com.br';
-            document.getElementById('hidden_logon_sAMAccountName').value = logonName;
-            document.getElementById('hidden_logon_email').value = logonName + emailDomain;
-        });
-
-        // Function to get query parameters from URL
+        // Função para obter parâmetros da URL
         function getQueryParams() {
             const params = {};
             window.location.search.substring(1).split("&").forEach(function(pair) {
@@ -151,7 +111,7 @@
             return params;
         }
 
-        // Populate form with query parameters
+        // Popula o formulário com os parâmetros da URL
         window.onload = function() {
             const params = getQueryParams();
             document.getElementById('employeeID').innerText = params.employeeID;
@@ -167,7 +127,7 @@
             document.getElementById('st').innerText = params.st;
             document.getElementById('company').innerText = params.company;
 
-            // Set hidden inputs
+            // Define os valores dos inputs ocultos
             document.getElementById('hidden_employeeID').value = params.employeeID;
             document.getElementById('hidden_nome').value = params.nome;
             document.getElementById('hidden_sobrenome').value = params.sobrenome;

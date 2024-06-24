@@ -1,6 +1,7 @@
+import os
+from base64 import b64encode, b64decode
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from functools import wraps
-import os
 from dotenv import load_dotenv
 from config import *
 from datetime import datetime, timedelta, timezone
@@ -214,3 +215,15 @@ def user_details(username):
             return None
     except Exception as e:
         return str(e), False
+    
+def encrypt_base64(str_encode):
+    try:
+        return b64encode(str_encode.encode('utf-8'))
+    except Exception as e:
+        return None
+    
+def decrypt_base64(str_encode):
+    try:
+        return b64decode(str_encode.encode('utf-8'))
+    except Exception as e:
+        return None

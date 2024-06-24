@@ -62,6 +62,32 @@
           </form>
           
         </div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+            {% if users %}
+              <tr>
+                  <th>Nome</th>
+                  <th>Ações</th>
+              </tr>
+             {% endif %} 
+          </thead>
+          
+          <tbody>
+          
+              {% for user in users %}
+              <tr>
+                  <td>{{ user.cn }}</td>
+                  <td>
+                      <a href="/search?query={{ user.cn }}" class="btn btn-primary">
+                          <i class="fas fa-edit"></i>
+                      </a>
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+
+        </table>
       </div>
         {% endif %}
 

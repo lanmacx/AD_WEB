@@ -3,7 +3,8 @@ from flask import Flask, request, render_template, redirect, url_for, flash, ses
 from functools import wraps
 import os
 from dotenv import load_dotenv
-from services import verificar_login, verificar_expiracao_senha, alterar_senha_usuario, desbloquear_usuario, verificar_grupo, user_details
+from services import verificar_login, verificar_expiracao_senha, alterar_senha_usuario, \
+    desbloquear_usuario, verificar_grupo
 from config import *
 from datetime import datetime, timedelta, timezone
 from ldap3 import Server, Connection, ALL, SUBTREE, SIMPLE, AUTO_BIND_TLS_BEFORE_BIND, MODIFY_REPLACE, AUTO_BIND_NO_TLS
@@ -105,7 +106,7 @@ def post_create_rh():
         st = request.form.get('st')
         company = request.form.get('company')
         
-        query_params = f"?employeeID={employeeID}&nome={nome}&sobrenome={sobrenome}&data_nascimento={data_nascimento}&data_contratacao={data_contratacao}&departamento={departamento}&cargo={cargo}&telephoneNumber={telephoneNumber}&regional={regional}&physicalDeliveryOfficeName={physicalDeliveryOfficeName}&st={st}&company={company}"
+        query_params =  f"?employeeID={employeeID}&nome={nome}&sobrenome={sobrenome}&data_nascimento={data_nascimento}&data_contratacao={data_contratacao}&departamento={departamento}&cargo={cargo}&telephoneNumber={telephoneNumber}&regional={regional}&physicalDeliveryOfficeName={physicalDeliveryOfficeName}&st={st}&company={company}"
         
         email_body = f"""
         <html>
@@ -134,6 +135,7 @@ def post_create_rh():
         send_email("Criar usuário", "allan.santos@amchambrasil.com.br", email_body)
 
         flash('Enviado com sucesso!', 'success')
+        
         return redirect(url_for('rh'))
 
 @app.route('/users')
